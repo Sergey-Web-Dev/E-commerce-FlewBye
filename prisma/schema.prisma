@@ -1,0 +1,63 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int    @id   @default(autoincrement())
+  email String @unique
+  hash  String
+  salt  String
+
+  cart  Cart[]
+}
+
+// model ItemList {
+//   id        Int   @id   @default(autoincrement())
+
+//   ownerId   Int   @unique
+//   owner     User  @relation(fields: [ownerId], references: [id])
+
+//   items     Item[]
+// }
+
+enum ItemType {
+  Soap
+  Gift
+  Gel
+}
+
+model Item {
+  id            Int       @id   @default(autoincrement())
+
+  name          String
+  img           String[]
+  description   String
+  price         Int
+  type          ItemType
+
+  createdAt     DateTime @default(now())
+  
+  cart Cart[]
+}
+
+model Cart {
+  id            Int       @id   @default(autoincrement())
+
+  ownerId       Int       
+  owner         User      @relation(fields: [ownerId], references: [id])
+
+  tel           String
+  count         Int
+  mail          String
+  isFinished    Boolean
+
+  item          Item[]
+  createdAt DateTime @default(now())
+}
