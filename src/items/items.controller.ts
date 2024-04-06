@@ -63,11 +63,23 @@ export class ItemsController {
   @ApiCreatedResponse({
     type: patchItemDto,
   })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FilesInterceptor('img', 3, {
+      storage: diskStorage({
+        destination: '../client/public',
+        filename: (req, file, cb) => {
+          cb(null, `${file.originalname}`);
+        },
+      }),
+    }),
+  )
   patchItem(
     @Body() body: patchItemDto,
     @Param('id', ParseIntPipe) id: number,
+    @UploadedFiles() files: Express.Multer.File[],
   ): Promise<patchItemDto> {
-    return this.itemsService.patchItem(id, body);
+    return this.itemsService.patchItem(id, body, files);
   }
 
   @Delete('delete-item/:id')

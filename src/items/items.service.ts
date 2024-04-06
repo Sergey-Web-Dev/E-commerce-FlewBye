@@ -23,13 +23,23 @@ export class ItemsService {
     });
   }
 
-  async patchItem(id: number, body: patchItemDto) {
+  async patchItem(
+    id: number,
+    body: patchItemDto,
+    files: Express.Multer.File[],
+  ) {
+    const { price, name, type, description } = body;
+
     return await this.db.item.update({
       where: {
         id: id,
       },
       data: {
-        ...body,
+        price: typeof price === 'number' ? price : +price,
+        name,
+        type,
+        img: files.map((item) => item.filename),
+        description,
       },
     });
   }

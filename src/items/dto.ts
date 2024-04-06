@@ -37,7 +37,14 @@ export class patchItemDto {
   @ApiProperty()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'array',
+    items: {
+      type: 'string',
+      format: 'binary',
+    },
+    required: true,
+  })
   img: string[];
 
   @ApiProperty()
@@ -52,7 +59,10 @@ export class patchItemDto {
   @IsIn([$Enums.ItemType.Gel, $Enums.ItemType.Gift, $Enums.ItemType.Soap])
   type: $Enums.ItemType;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    default: new Date(),
+  })
   createdAt: Date;
 }
 
